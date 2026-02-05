@@ -1,15 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:audioplayers/audioplayers.dart';
 
+import '../../../shared/utils/file_scanner.dart';
+
 enum PlayerStatus {idle , playing , paused , stopped}
 
 class PlayerState{
   final PlayerStatus status;
   final String? filePath;
+  final List<String> songs;
   
   const PlayerState({
     required this.status,
-    this.filePath
+    this.filePath,
+    this.songs =const [],
   });
 
   String getPath(){
@@ -18,11 +22,13 @@ class PlayerState{
 
   PlayerState copyWith({
     PlayerStatus? status,
-    String? filePath
+    String? filePath,
+    List<String>? songs,
   }){
     return PlayerState(
       status: status ?? this.status,
-      filePath: filePath ?? this.filePath
+      filePath: filePath ?? this.filePath,
+      songs: songs ?? this.songs
     );
   }
 }
@@ -33,6 +39,18 @@ class PlayerCubit extends Cubit<PlayerState>{
   
   void loadPath(String path){
     emit(state.copyWith(filePath: path));
+  }
+
+  Future<void> loadLocalMusic(String? path) async{
+
+    if(path==null){
+      emit(state.copyWith(songs:[]));
+      return;
+    }
+
+    final paths = await scanLocalMusicFiles([path]);
+
+    emit(state.copyWith(songs: paths));
   }
 
   void play(){

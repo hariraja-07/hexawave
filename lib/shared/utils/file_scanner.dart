@@ -8,16 +8,24 @@ Future<List<String>> scanLocalMusicFiles(List<String> directories) async {
     final dir = Directory(dirPath);
 
     if(!await dir.exists()) continue;
+    
+    try{
+      await for(final entity in dir.list(
+        recursive: true,
+        followLinks: false
+      )){
+        if(_isHidden(entity.path)) continue;
 
-    await for(final entity in dir.list(
-      recursive: true,
-      followLinks: false
-    )){
-      if(_isHidden(entity.path)) continue;
-
-      if(entity is File && _isAudioFile(entity.path)){
-        musicPaths.add(entity.path);
+        if(entity is File){
+print('FOUND FILE: ${entity.path}');
+        }
+        
+        if(entity is File && _isAudioFile(entity.path)){
+          musicPaths.add(entity.path);
+        }
       }
+    } on FileSystemException {
+      continue;
     }
   }
 

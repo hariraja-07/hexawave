@@ -13,6 +13,7 @@ class HexaWaveApp extends StatelessWidget{
       child: MaterialApp.router(
         title: 'HexaWave',
         routerConfig: appRouter,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
