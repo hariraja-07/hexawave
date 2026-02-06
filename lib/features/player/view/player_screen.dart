@@ -1,6 +1,8 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hexawave/features/player/widgets/library_panel.dart';
+import 'package:hexawave/features/player/widgets/player_panel.dart';
 import '../logic/player_cubit.dart';        
 
 class PlayerScreen extends StatelessWidget{
@@ -17,9 +19,7 @@ class PlayerScreen extends StatelessWidget{
         children: [
           Expanded(
             flex: 3,
-            child: Center(
-              child:Text("Library Panel"),
-            ),
+            child: LibraryPanel() 
           ),
 
           const VerticalDivider(
@@ -29,7 +29,7 @@ class PlayerScreen extends StatelessWidget{
           Expanded(
             flex: 2,
             child: Center(
-              child: Text("Player Panel"),
+              child: PlayerPanel(),
             ),
           )
         ],
