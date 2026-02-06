@@ -6,10 +6,23 @@ class LibraryPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(12),
       child: Column(
         children: [
-          Text(
-            "Library Panel"
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Container(
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: (){}, 
+              child: Text("Select Folder")
+              ),
           )
         ],
       ),
