@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hexawave/features/player/logic/player_cubit.dart';
 
 class LibraryPanel extends StatefulWidget {
   const LibraryPanel({super.key});
@@ -14,10 +16,11 @@ class _LibraryPanelState extends State<LibraryPanel> {
 
   Future<void> selectFolder() async{
     final folderPath = await FilePicker.platform.getDirectoryPath();
-    if(folderPath == null) return; 
+    if(folderPath == null) return;
 
-    print('Selected folder : $folderPath');
+    if(!mounted) return;
 
+    context.read<PlayerCubit>().loadMusicFolder(folderPath);
     setState(() {
       selectedFolder= folderPath;
       showFileScreen = true;
@@ -94,16 +97,37 @@ class FileScreen extends StatelessWidget{
                 icon: Icon(Icons.arrow_back,size: 20,)
               ),
               const SizedBox(width: 8,),
-              const Text(
-                'Selected Folder'
-              )
-
+              const Text("Selected Folder")
             ],
           ),
         ),
-
         Expanded(
-          child: Text(""),
+          child: BlocBuilder<PlayerCubit,PlayerState>(
+            builder: (context,state){
+              if(state.songs.isEmpty){
+                return const Center(
+                  child: Text("No Music found"),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: state.songs.length,
+                itemBuilder: (context,index){
+                  return ListTile(
+                    title: Text(
+                      state.songs[index].split('/').last,
+                      maxLines: 1,
+                    ),
+                    onTap: (){
+                      context
+                        .read<PlayerCubit>()
+                        .loadPath(state.songs[index]);
+                    },
+                  );
+                },
+              );
+            },
+          ),
         )
       ],
     );

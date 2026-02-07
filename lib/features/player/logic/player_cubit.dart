@@ -41,15 +41,12 @@ class PlayerCubit extends Cubit<PlayerState>{
     emit(state.copyWith(filePath: path));
   }
 
-  Future<void> loadLocalMusic(String? path) async{
-
+  Future<void> loadMusicFolder(String? path) async{
     if(path==null){
       emit(state.copyWith(songs:[]));
       return;
     }
-
-    final paths = await scanLocalMusicFiles([path]);
-
+    final paths = await scanLocalMusicFiles(path);
     emit(state.copyWith(songs: paths));
   }
 
