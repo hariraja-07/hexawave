@@ -7,27 +7,37 @@ enum PlayerStatus {idle , playing , paused , stopped}
 
 class PlayerState{
   final PlayerStatus status;
-  final String? filePath;
+  final String? songPath;
   final List<String> songs;
-  
+  final String? currentFolder;
+
   const PlayerState({
     required this.status,
-    this.filePath,
+    this.songPath,
+    this.currentFolder,
     this.songs =const [],
   });
 
+  String songNameAt(int index){
+    return songs[index]
+      .split('/')
+      .last;
+  }
+
   String getPath(){
-    return filePath ?? '';
+    return songPath ?? '';
   }
 
   PlayerState copyWith({
     PlayerStatus? status,
-    String? filePath,
+    String? songPath,
     List<String>? songs,
+    String? currentFolder
   }){
     return PlayerState(
       status: status ?? this.status,
-      filePath: filePath ?? this.filePath,
+      songPath: songPath ?? this.songPath,
+      currentFolder: currentFolder,
       songs: songs ?? this.songs
     );
   }
@@ -37,17 +47,24 @@ class PlayerCubit extends Cubit<PlayerState>{
   final AudioPlayer _player = AudioPlayer();
   PlayerCubit() : super(const PlayerState(status: PlayerStatus.idle));
   
-  void loadPath(String path){
-    emit(state.copyWith(filePath: path));
+  void selectSong({
+    int? index,
+    String? songPath
+    }){
+    if(index!=null){
+      emit(state.copyWith(songPath:state.songs[index]));
+    }else if(songPath != null){
+      emit(state.copyWith(songPath: songPath));
+    }
   }
 
-  Future<void> loadMusicFolder(String? path) async{
+  Future<void> selectFolder(String? path) async{
     if(path==null){
       emit(state.copyWith(songs:[]));
       return;
     }
     final paths = await scanLocalMusicFiles(path);
-    emit(state.copyWith(songs: paths));
+    emit(state.copyWith(currentFolder: path,songs: paths));
   }
 
   void play(){
@@ -56,6 +73,11 @@ class PlayerCubit extends Cubit<PlayerState>{
       _player.play(DeviceFileSource(path));
       emit(state.copyWith(status: PlayerStatus.playing));
     }
+  }
+
+  String getSong(int index){
+    final path = state.songs[index];
+    return path.split('/').last;
   }
 
   void pause(){

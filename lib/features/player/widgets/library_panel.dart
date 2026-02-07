@@ -20,7 +20,7 @@ class _LibraryPanelState extends State<LibraryPanel> {
 
     if(!mounted) return;
 
-    context.read<PlayerCubit>().loadMusicFolder(folderPath);
+    context.read<PlayerCubit>().selectFolder(folderPath);
     setState(() {
       selectedFolder= folderPath;
       showFileScreen = true;
@@ -78,7 +78,6 @@ class BaseScreen extends StatelessWidget{
 
 class FileScreen extends StatelessWidget{
   final VoidCallback onBack;
-
   const FileScreen({
     super.key,
     required this.onBack,
@@ -97,7 +96,13 @@ class FileScreen extends StatelessWidget{
                 icon: Icon(Icons.arrow_back,size: 20,)
               ),
               const SizedBox(width: 8,),
-              const Text("Selected Folder")
+              
+              BlocSelector<PlayerCubit,PlayerState,String?>(
+                selector:(state) => state.currentFolder,
+                builder: (context,folder){
+                  return Text(folder ?? "Selected Folder");
+                },
+              ),
             ],
           ),
         ),
@@ -115,13 +120,13 @@ class FileScreen extends StatelessWidget{
                 itemBuilder: (context,index){
                   return ListTile(
                     title: Text(
-                      state.songs[index].split('/').last,
+                      state.songNameAt(index),
                       maxLines: 1,
                     ),
                     onTap: (){
                       context
                         .read<PlayerCubit>()
-                        .loadPath(state.songs[index]);
+                        .selectSong(index:index);
                     },
                   );
                 },
