@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 class LibraryPanel extends StatefulWidget {
   const LibraryPanel({super.key});
@@ -9,9 +10,16 @@ class LibraryPanel extends StatefulWidget {
 
 class _LibraryPanelState extends State<LibraryPanel> {
   bool showFileScreen = false;
+  String? selectedFolder;
 
-  void openFileScreen(){
+  Future<void> selectFolder() async{
+    final folderPath = await FilePicker.platform.getDirectoryPath();
+    if(folderPath == null) return; 
+
+    print('Selected folder : $folderPath');
+
     setState(() {
+      selectedFolder= folderPath;
       showFileScreen = true;
     });
   }
@@ -28,7 +36,7 @@ class _LibraryPanelState extends State<LibraryPanel> {
       padding: EdgeInsets.all(12),
       child: showFileScreen 
       ? FileScreen(onBack : goBack) 
-      : BaseScreen(onSelectFolder : openFileScreen),
+      : BaseScreen(onSelectFolder : selectFolder),
     );
   }
 }
@@ -82,7 +90,7 @@ class FileScreen extends StatelessWidget{
           child: Row(
             children: [
               IconButton(
-                onPressed: onBack, 
+                onPressed:onBack, 
                 icon: Icon(Icons.arrow_back,size: 20,)
               ),
               const SizedBox(width: 8,),
