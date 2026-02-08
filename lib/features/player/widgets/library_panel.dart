@@ -3,43 +3,32 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexawave/features/player/logic/player_cubit.dart';
 
-class LibraryPanel extends StatefulWidget {
+class LibraryPanel extends StatelessWidget {
   const LibraryPanel({super.key});
 
-  @override
-  State<LibraryPanel> createState() => _LibraryPanelState();
-}
-
-class _LibraryPanelState extends State<LibraryPanel> {
-  bool showFileScreen = false;
-  String? selectedFolder;
-
-  Future<void> selectFolder() async{
+  Future<void> _pickFolder(BuildContext context) async{
     final folderPath = await FilePicker.platform.getDirectoryPath();
-    if(folderPath == null) return;
-
-    if(!mounted) return;
-
-    context.read<PlayerCubit>().selectFolder(folderPath);
-    setState(() {
-      selectedFolder= folderPath;
-      showFileScreen = true;
-    });
-  }
-
-  void goBack(){
-    setState(() {
-      showFileScreen = false;
-    });
+    if(folderPath != null && context.mounted) {
+      context.read<PlayerCubit>().selectFolder(folderPath);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(12),
-      child: showFileScreen 
-      ? FileScreen(onBack : goBack) 
-      : BaseScreen(onSelectFolder : selectFolder),
+      child: BlocSelector<PlayerCubit,PlayerState,bool>(
+        selector: (state)=> state.currentFolder != null, 
+        builder: (context,hasFolder){
+          return hasFolder
+            ? FileScreen(
+              onBack: () => context.read<PlayerCubit>().clearFolder(),
+            )
+            : BaseScreen(
+              onSelectFolder: () => _pickFolder(context),
+            );
+        }
+      )
     );
   }
 }

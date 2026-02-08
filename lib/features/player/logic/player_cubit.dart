@@ -46,7 +46,11 @@ class PlayerState{
 class PlayerCubit extends Cubit<PlayerState>{
   final AudioPlayer _player = AudioPlayer();
   PlayerCubit() : super(const PlayerState(status: PlayerStatus.idle));
-  
+
+  void clearFolder(){
+    emit(state.copyWith(currentFolder: null,songs: []));
+  }
+
   void selectSong({
     int? index,
     String? songPath
