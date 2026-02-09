@@ -56,9 +56,9 @@ class PlayerCubit extends Cubit<PlayerState>{
     String? songPath
     }){
     if(index!=null){
-      emit(state.copyWith(songPath:state.songs[index]));
+      emit(state.copyWith(currentFolder: state.currentFolder,songPath:state.songs[index]));
     }else if(songPath != null){
-      emit(state.copyWith(songPath: songPath));
+      emit(state.copyWith(currentFolder: state.currentFolder, songPath: songPath));
     }
   }
 
@@ -75,7 +75,7 @@ class PlayerCubit extends Cubit<PlayerState>{
     final path = state.getPath();
     if(path != ''){
       _player.play(DeviceFileSource(path));
-      emit(state.copyWith(status: PlayerStatus.playing));
+      emit(state.copyWith(currentFolder: state.currentFolder,status: PlayerStatus.playing));
     }
   }
 
@@ -86,12 +86,12 @@ class PlayerCubit extends Cubit<PlayerState>{
 
   void pause(){
     _player.pause();
-    emit(state.copyWith(status: PlayerStatus.paused));
+    emit(state.copyWith(currentFolder: state.currentFolder,status: PlayerStatus.paused));
   }
 
   void stop(){
     _player.stop();
-    emit(state.copyWith(status: PlayerStatus.stopped));
+    emit(state.copyWith(currentFolder: state.currentFolder,status: PlayerStatus.stopped));
   }
 
   @override  
