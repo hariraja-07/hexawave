@@ -79,8 +79,7 @@ class PlayerCubit extends Cubit<PlayerState>{
     }
   }
 
-  String getSong(int index){
-    final path = state.songs[index];
+  String getSongTitle(String path){
     return path.split('/').last;
   }
 
