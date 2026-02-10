@@ -46,12 +46,12 @@ class BaseScreen extends StatelessWidget{
     return Column(
       children: [
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: Container(
-              color: Colors.blue,
-            ),
-          ),
+          flex: 3,
+          child: Text("Recent songs")
+        ),
+        Expanded(
+          flex: 2,
+          child: Text("Recent Folders")
         ),
         SizedBox(
           width: double.infinity,
