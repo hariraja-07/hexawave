@@ -13,7 +13,7 @@ class RecentItemAdapter extends TypeAdapter<RecentItem> {
   @override
   RecentItem read(BinaryReader reader) {
     reader.readByte();
-    return RecentItem(path: '', title: '', lastAccessedMs: 0);
+    return RecentItem(path: '', title: '');
   }
 
   @override
