@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexawave/features/player/logic/player_cubit.dart';
+import 'package:hexawave/features/recents/view/recent_panel.dart';
 
 class LibraryPanel extends StatelessWidget {
   const LibraryPanel({super.key});
@@ -45,14 +46,9 @@ class BaseScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
-          flex: 3,
-          child: Text("Recent songs")
-        ),
-        Expanded(
-          flex: 2,
-          child: Text("Recent Folders")
-        ),
+        
+        Expanded(child: RecentPanel()),
+        
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
