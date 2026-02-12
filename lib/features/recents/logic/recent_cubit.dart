@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -6,7 +8,9 @@ import '../data/models/recent_item.dart';
 
 @injectable 
 class RecentCubit extends Cubit<List<RecentItem>>{
-  RecentCubit(this._local) : super([]);
+  RecentCubit(this._local) : super([]){
+    loadRecents();
+  }
 
   final RecentLocalDataSource _local;
 
@@ -28,6 +32,8 @@ class RecentCubit extends Cubit<List<RecentItem>>{
     _local.save(item);
     _local.trimToLimit(10);
     loadRecents();
+
+    print(_local.getAll());
   }
 
   void addFolder({
@@ -38,11 +44,13 @@ class RecentCubit extends Cubit<List<RecentItem>>{
       type: RecentType.folder,
       path: path, 
       title: title,
-      lastAccessedMs: DateTime.now().microsecondsSinceEpoch,
+      lastAccessedMs: DateTime.now().millisecondsSinceEpoch,
     );
 
     _local.save(item);
     _local.trimToLimit(10);
     loadRecents();
   }
+
+  
 }

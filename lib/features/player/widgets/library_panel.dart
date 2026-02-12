@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexawave/features/player/logic/player_cubit.dart';
+import 'package:hexawave/features/recents/logic/recent_cubit.dart';
 import 'package:hexawave/features/recents/view/recent_panel.dart';
+import 'package:hexawave/injection.dart';
 
 class LibraryPanel extends StatelessWidget {
   const LibraryPanel({super.key});
@@ -11,7 +13,14 @@ class LibraryPanel extends StatelessWidget {
     final folderPath = await FilePicker.platform.getDirectoryPath();
     if(folderPath != null && context.mounted) {
       context.read<PlayerCubit>().selectFolder(folderPath);
+    
+        addFolderToRecent(context, folderPath);
     }
+  }
+
+  void addFolderToRecent(BuildContext context,String path){
+    final title = context.read<PlayerCubit>().getSongTitle(path);
+    context.read<RecentCubit>().addFolder(path: path, title: title);
   }
 
   @override
@@ -26,7 +35,7 @@ class LibraryPanel extends StatelessWidget {
               onBack: () => context.read<PlayerCubit>().clearFolder(),
             )
             : BaseScreen(
-              onSelectFolder: () => _pickFolder(context),
+              onSelectFolder: () =>   _pickFolder(context),
             );
         }
       )
@@ -47,7 +56,12 @@ class BaseScreen extends StatelessWidget{
     return Column(
       children: [
         
-        Expanded(child: RecentPanel()),
+        Expanded(
+          child: BlocProvider(
+            create: (_) => getIt<RecentCubit>(),
+            child: const RecentPanel(),
+            ),
+          ),
         
         SizedBox(
           width: double.infinity,
@@ -112,6 +126,13 @@ class FileScreen extends StatelessWidget{
                       context
                         .read<PlayerCubit>()
                         .selectSong(index:index);
+
+                      final path = state.songs[index];
+                      final title = context.read<PlayerCubit>().getSongTitle(path);
+
+                      context
+                        .read<RecentCubit>()
+                        .addTrack(path: path, title: title );
                     },
                   );
                 },
