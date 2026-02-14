@@ -11,10 +11,16 @@ class LibraryPanel extends StatelessWidget {
 
   Future<void> _pickFolder(BuildContext context) async{
     final folderPath = await FilePicker.platform.getDirectoryPath();
+  
     if(folderPath != null && context.mounted) {
-      context.read<PlayerCubit>().selectFolder(folderPath);
-    
-        addFolderToRecent(context, folderPath);
+      final playerCubit = context.read<PlayerCubit>();
+      playerCubit.selectFolder(folderPath);
+
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        if(context.mounted){
+          addFolderToRecent(context, folderPath);
+        }
+      });
     }
   }
 
@@ -25,20 +31,23 @@ class LibraryPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(12),
-      child: BlocSelector<PlayerCubit,PlayerState,bool>(
-        selector: (state)=> state.currentFolder != null, 
-        builder: (context,hasFolder){
-          return hasFolder
-            ? FileScreen(
-              onBack: () => context.read<PlayerCubit>().clearFolder(),
-            )
-            : BaseScreen(
-              onSelectFolder: () =>   _pickFolder(context),
-            );
-        }
-      )
+    return BlocProvider(
+      create: (_) => getIt<RecentCubit>(),
+      child: Container(
+        padding: EdgeInsets.all(12),
+        child: BlocSelector<PlayerCubit,PlayerState,bool>(
+          selector: (state)=> state.currentFolder != null, 
+          builder: (context,hasFolder){
+            return hasFolder
+              ? FileScreen(
+                onBack: () => context.read<PlayerCubit>().clearFolder(),
+              )
+              : BaseScreen(
+                onSelectFolder: () =>   _pickFolder(context),
+              );
+          }
+        )
+      ),
     );
   }
 }
@@ -59,7 +68,7 @@ class BaseScreen extends StatelessWidget{
         Expanded(
           child: BlocProvider(
             create: (_) => getIt<RecentCubit>(),
-            child: const RecentPanel(),
+            child: RecentPanel(),
             ),
           ),
         
