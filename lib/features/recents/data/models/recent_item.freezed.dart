@@ -14,17 +14,18 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+RecentItem _$RecentItemFromJson(Map<String, dynamic> json) {
+  return _RecentItem.fromJson(json);
+}
+
 /// @nodoc
 mixin _$RecentItem {
-  @HiveField(0)
   RecentType get type => throw _privateConstructorUsedError;
-  @HiveField(1)
   String get path => throw _privateConstructorUsedError;
-  @HiveField(2)
   String get title => throw _privateConstructorUsedError;
-  @HiveField(3)
   int get lastAccessedMs => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $RecentItemCopyWith<RecentItem> get copyWith =>
       throw _privateConstructorUsedError;
@@ -36,11 +37,7 @@ abstract class $RecentItemCopyWith<$Res> {
           RecentItem value, $Res Function(RecentItem) then) =
       _$RecentItemCopyWithImpl<$Res, RecentItem>;
   @useResult
-  $Res call(
-      {@HiveField(0) RecentType type,
-      @HiveField(1) String path,
-      @HiveField(2) String title,
-      @HiveField(3) int lastAccessedMs});
+  $Res call({RecentType type, String path, String title, int lastAccessedMs});
 }
 
 /// @nodoc
@@ -90,11 +87,7 @@ abstract class _$$RecentItemImplCopyWith<$Res>
       __$$RecentItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@HiveField(0) RecentType type,
-      @HiveField(1) String path,
-      @HiveField(2) String title,
-      @HiveField(3) int lastAccessedMs});
+  $Res call({RecentType type, String path, String title, int lastAccessedMs});
 }
 
 /// @nodoc
@@ -135,27 +128,26 @@ class __$$RecentItemImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$RecentItemImpl implements _RecentItem {
-  _$RecentItemImpl(
-      {@HiveField(0) this.type = RecentType.track,
-      @HiveField(1) required this.path,
-      @HiveField(2) required this.title,
-      @HiveField(3) this.lastAccessedMs = 0});
+  const _$RecentItemImpl(
+      {this.type = RecentType.track,
+      required this.path,
+      required this.title,
+      this.lastAccessedMs = 0});
+
+  factory _$RecentItemImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RecentItemImplFromJson(json);
 
   @override
   @JsonKey()
-  @HiveField(0)
   final RecentType type;
   @override
-  @HiveField(1)
   final String path;
   @override
-  @HiveField(2)
   final String title;
   @override
   @JsonKey()
-  @HiveField(3)
   final int lastAccessedMs;
 
   @override
@@ -175,6 +167,7 @@ class _$RecentItemImpl implements _RecentItem {
                 other.lastAccessedMs == lastAccessedMs));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, type, path, title, lastAccessedMs);
@@ -184,26 +177,32 @@ class _$RecentItemImpl implements _RecentItem {
   @pragma('vm:prefer-inline')
   _$$RecentItemImplCopyWith<_$RecentItemImpl> get copyWith =>
       __$$RecentItemImplCopyWithImpl<_$RecentItemImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RecentItemImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _RecentItem implements RecentItem {
-  factory _RecentItem(
-      {@HiveField(0) final RecentType type,
-      @HiveField(1) required final String path,
-      @HiveField(2) required final String title,
-      @HiveField(3) final int lastAccessedMs}) = _$RecentItemImpl;
+  const factory _RecentItem(
+      {final RecentType type,
+      required final String path,
+      required final String title,
+      final int lastAccessedMs}) = _$RecentItemImpl;
+
+  factory _RecentItem.fromJson(Map<String, dynamic> json) =
+      _$RecentItemImpl.fromJson;
 
   @override
-  @HiveField(0)
   RecentType get type;
   @override
-  @HiveField(1)
   String get path;
   @override
-  @HiveField(2)
   String get title;
   @override
-  @HiveField(3)
   int get lastAccessedMs;
   @override
   @JsonKey(ignore: true)

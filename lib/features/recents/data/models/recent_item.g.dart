@@ -3,70 +3,27 @@
 part of 'recent_item.dart';
 
 // **************************************************************************
-// TypeAdapterGenerator
+// JsonSerializableGenerator
 // **************************************************************************
 
-class RecentItemAdapter extends TypeAdapter<RecentItem> {
-  @override
-  final int typeId = 1;
+_$RecentItemImpl _$$RecentItemImplFromJson(Map<String, dynamic> json) =>
+    _$RecentItemImpl(
+      type: $enumDecodeNullable(_$RecentTypeEnumMap, json['type']) ??
+          RecentType.track,
+      path: json['path'] as String,
+      title: json['title'] as String,
+      lastAccessedMs: (json['lastAccessedMs'] as num?)?.toInt() ?? 0,
+    );
 
-  @override
-  RecentItem read(BinaryReader reader) {
-    reader.readByte();
-    return RecentItem(path: '', title: '');
-  }
+Map<String, dynamic> _$$RecentItemImplToJson(_$RecentItemImpl instance) =>
+    <String, dynamic>{
+      'type': _$RecentTypeEnumMap[instance.type]!,
+      'path': instance.path,
+      'title': instance.title,
+      'lastAccessedMs': instance.lastAccessedMs,
+    };
 
-  @override
-  void write(BinaryWriter writer, RecentItem obj) {
-    writer.writeByte(0);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RecentItemAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class RecentTypeAdapter extends TypeAdapter<RecentType> {
-  @override
-  final int typeId = 2;
-
-  @override
-  RecentType read(BinaryReader reader) {
-    switch (reader.readByte()) {
-      case 0:
-        return RecentType.track;
-      case 1:
-        return RecentType.folder;
-      default:
-        return RecentType.track;
-    }
-  }
-
-  @override
-  void write(BinaryWriter writer, RecentType obj) {
-    switch (obj) {
-      case RecentType.track:
-        writer.writeByte(0);
-        break;
-      case RecentType.folder:
-        writer.writeByte(1);
-        break;
-    }
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RecentTypeAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
+const _$RecentTypeEnumMap = {
+  RecentType.track: 'track',
+  RecentType.folder: 'folder',
+};
